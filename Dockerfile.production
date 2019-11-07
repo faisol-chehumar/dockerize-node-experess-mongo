@@ -1,0 +1,14 @@
+FROM node:latest
+
+## Add the wait script to the image
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.5.0/wait /wait
+RUN chmod +x /wait
+
+WORKDIR /home/nodejs/app
+ENV NODE_ENV prod
+COPY package*.json ./
+RUN npm install --only=production
+ARG port=80
+EXPOSE $port
+COPY . ./
+CMD /wait && node index.js
